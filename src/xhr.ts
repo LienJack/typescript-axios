@@ -1,4 +1,5 @@
 import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from "./types"
+
 export default function xhr(config:AxiosRequestConfig) :AxiosPromise {
   return new Promise((resolve , reject) => {
     const { method = "get", url , data = null, headers, responseType } = config
