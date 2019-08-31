@@ -6,13 +6,14 @@ export type Method = 'get' | 'GET'
 | 'put' | 'PUT'
 | 'patch' | 'PATCH'
 export interface AxiosRequestConfig {
-  url: string,
+  url?: string,
   method?: Method ,
   data ?: any ,
   params ?: any ,
   headers ?: any ,
   responseType ?: XMLHttpRequestResponseType ,
-  timeout?: number
+  timeout?: number,
+  [propName:string]: any,
 }
 
 export interface AxiosResponse {
@@ -34,6 +35,11 @@ export interface AxiosError extends Error {
   response?: AxiosResponse
 }
 export interface Axios {
+  defaults: AxiosRequestConfig ,
+  interceptors: {
+    request: AxiosInterceptorManager<AxiosRequestConfig>
+    response: AxiosInterceptorManager<AxiosRequestConfig>
+  }
   request(config: AxiosRequestConfig): AxiosPromise
 
   get(url: string, config?: AxiosRequestConfig): AxiosPromise
@@ -54,4 +60,16 @@ export interface Axios {
 export interface AxiosInstance extends Axios {
   (config: AxiosRequestConfig): AxiosPromise
   (url:string, config?: AxiosRequestConfig) : AxiosPromise
+}
+
+export interface AxiosInterceptorManager<T> {
+  use(resolve: ResovledFn<T>,reject: RejectedFn): number
+  eject(id: number): void
+}
+
+export interface ResovledFn<T> {
+  (val: T): T | Promise<T>
+}
+export interface RejectedFn {
+  (error: any): any
 }
